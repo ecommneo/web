@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <title>Anonymous - Expect Us</title>
+    <style>
+      body {
+        background-color: #000000;
+        overflow-x: hidden;
+      }
+      
+      @keyframes glow-pulse {
+        0%, 100% {
+          filter: drop-shadow(0 0 20px rgba(34, 197, 94, 0.6));
+        }
+        50% {
+          filter: drop-shadow(0 0 35px rgba(34, 197, 94, 0.9)) drop-shadow(0 0 50px rgba(34, 197, 94, 0.4));
+        }
+      }
+      
+      @keyframes terminal-blink {
+        0%, 50% {
+          opacity: 1;
+        }
+        51%, 100% {
+          opacity: 0;
+        }
+      }
+      
+      @keyframes scan {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(400%);
+        }
+      }
+      
+      @keyframes glitch-bg {
+        0%, 95%, 100% {
+          background-position: 0% 0%;
+          filter: none;
+        }
+        2% {
+          background-position: 2px 0;
+          filter: hue-rotate(90deg) brightness(1.1);
+        }
+        4% {
+          background-position: -1px 0;
+          filter: hue-rotate(0deg) brightness(0.9);
+        }
+        6% {
+          background-position: 0px 0;
+          filter: none;
+        }
+      }
+      
+      @keyframes static-noise {
+        0%, 90%, 100% {
+          opacity: 0;
+        }
+        5% {
+          opacity: 0.1;
+        }
+        10% {
+          opacity: 0;
+        }
+        15% {
+          opacity: 0.05;
+        }
+        20% {
+          opacity: 0;
+        }
+      }
+      
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 255, 0, 0.03) 2px,
+            rgba(0, 255, 0, 0.03) 4px
+          );
+        animation: glitch-bg 8s infinite linear;
+        pointer-events: none;
+        z-index: 1;
+      }
+      
+      body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          radial-gradient(circle at 20% 80%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+        animation: static-noise 6s infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
