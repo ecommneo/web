@@ -30,23 +30,19 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Debug - Check file structure
+      - name: Create missing src folder and files
         run: |
-          echo "=== ROOT FILES ==="
-          ls -la
-          echo "=== SRC FOLDER ==="
-          ls -la src/
-          echo "=== INDEX.HTML CONTENT ==="
-          cat index.html
-      
-      - name: Fix main.tsx if missing
-        run: |
-          if [ ! -f "src/main.tsx" ]; then
-            echo "Creating missing main.tsx..."
-            echo 'import React from "react"
+          mkdir -p src
+          mkdir -p public
+          
+          # Copy logo to public
+          cp newestANONlogo.png public/
+          
+          # Create index.css (basic styles)
+          echo '* { margin: 0; padding: 0; box-sizing: border-box; }' > src/index.css
+          
+          # Create main.tsx
+          echo 'import React from "react"
           import ReactDOM from "react-dom/client"
           import App from "./App.tsx"
           import "./index.css"
@@ -56,9 +52,16 @@ jobs:
               <App />
             </React.StrictMode>,
           )' > src/main.tsx
+          
+          # The App.tsx should already be uploaded - if not we'll create a basic one
+          if [ ! -f "src/App.tsx" ]; then
+            echo 'function App() { return <h1>Anonymous Website</h1>; } export default App;' > src/App.tsx
           fi
       
-      - name: Fix Vite config and paths
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Fix Vite config
         run: |
           echo 'import { defineConfig } from "vite"
           import react from "@vitejs/plugin-react"
@@ -67,15 +70,9 @@ jobs:
             plugins: [react()],
             base: "./"
           })' > vite.config.ts
-          
-          # Fix index.html to use correct paths
-          sed -i 's|src="/src/main.tsx"|src="./src/main.tsx"|g' index.html
-          sed -i 's|href="/|href="./|g' index.html
       
       - name: Build React app
         run: npm run build
-        env:
-          NODE_ENV: production
       
       - name: Setup Pages
         uses: actions/configure-pages@v5
