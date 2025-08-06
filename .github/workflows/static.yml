@@ -33,7 +33,32 @@ jobs:
       - name: Install dependencies
         run: npm install
       
-      - name: Fix Vite config for GitHub Pages
+      - name: Debug - Check file structure
+        run: |
+          echo "=== ROOT FILES ==="
+          ls -la
+          echo "=== SRC FOLDER ==="
+          ls -la src/
+          echo "=== INDEX.HTML CONTENT ==="
+          cat index.html
+      
+      - name: Fix main.tsx if missing
+        run: |
+          if [ ! -f "src/main.tsx" ]; then
+            echo "Creating missing main.tsx..."
+            echo 'import React from "react"
+          import ReactDOM from "react-dom/client"
+          import App from "./App.tsx"
+          import "./index.css"
+          
+          ReactDOM.createRoot(document.getElementById("root")!).render(
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>,
+          )' > src/main.tsx
+          fi
+      
+      - name: Fix Vite config and paths
         run: |
           echo 'import { defineConfig } from "vite"
           import react from "@vitejs/plugin-react"
@@ -42,10 +67,9 @@ jobs:
             plugins: [react()],
             base: "./"
           })' > vite.config.ts
-      
-      - name: Fix index.html paths
-        run: |
-          sed -i 's|src="/src/|src="./src/|g' index.html
+          
+          # Fix index.html to use correct paths
+          sed -i 's|src="/src/main.tsx"|src="./src/main.tsx"|g' index.html
           sed -i 's|href="/|href="./|g' index.html
       
       - name: Build React app
